@@ -1,7 +1,7 @@
 class LineBotController < ApplicationController
   protect_from_forgery expect: [:callback]
   def callback
-    
+    body =  request.body.read
   end
   
   private
@@ -12,5 +12,5 @@ class LineBotController < ApplicationController
          config.channel_token = ENV["LINE_CHANNEL_TOKEN"]
        }
      end
-     
+
 end
