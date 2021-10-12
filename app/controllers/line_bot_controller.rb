@@ -38,26 +38,24 @@ class LineBotController < ApplicationController
         'applicationId' => ENV['RAKUTEN_APPID'],
         'hits' => 5,
         'responseType' => 'small',
+        'datumType' => 1,
         'formatVersion' => 2
       }
       response = http_client.get(url, query)
       response = JSON.parse(response.body)
       if response.key?('error')
         text = 'この検索条件に該当する宿泊施設が見つかりませんでした。\n条件を変えて再検索してください。'
+        {
+          type:'text'
+          text: text
+        }
       else
-        text = ''
-      response['hotels'].each do |hotel|
-        text <<
-          hotel[0]['hotelBasicInfo']['hotelName'] + "\n" +
-          hotel[0]['hotelBasicInfo']['hotelInformationUrl'] + "\n" +
-          "\n"
+        {
+          type:flex
+          altText:'宿泊検索の結果です',
+          contents:set_carousel(response['hotels'])
+        }
       end
-      end
-
-      message = {
-        type: 'text',
-        text: text
-      }
     end
 
 end
